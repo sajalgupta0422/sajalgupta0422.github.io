@@ -1,0 +1,102 @@
+<div id="ajax-page" class="ajax-page-content">
+    <div class="ajax-page-wrapper">
+        <div class="ajax-page-nav">
+            <div class="nav-item ajax-page-prev-next">
+                <a class="ajax-page-load" href="#"><i class="lnr lnr-chevron-left"></i></a>
+                <a class="ajax-page-load" href="#"><i class="lnr lnr-chevron-right"></i></a>
+            </div>
+            <div class="nav-item ajax-page-close-button">
+                <a id="ajax-page-close-button" href="#"><i class="lnr lnr-cross"></i></a>
+            </div>
+        </div>
+
+        <div class="ajax-page-title">
+            <h1>Cinematic Chaos: The Lorenz Attractor</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 portfolio-block">
+                
+                <!-- GIF - constrained size -->
+                 <!--
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <img src="img/portfolio/lorenz/lorenz_max_zoom.gif" alt="Lorenz Attractor Animation" style="max-width: 420px; width: 100%; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+                </div>
+                -->
+
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <video autoplay loop muted playsinline 
+                        style="max-width: 420px; width: 100%; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                        <source src="img/portfolio/lorenz/lorenz_final_hq.webm" type="video/webm">
+                        </video>
+                </div>
+
+                <!-- The Equations -->
+                <p style="text-align: center; margin: 30px 0; line-height: 2.2;">
+                    At the heart of this visualization are three deceptively simple equations that changed our understanding of predictability:
+                </p>
+
+                <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                    \[\frac{dx}{dt} = \sigma(y - x) \qquad \frac{dy}{dt} = x(\rho - z) - y \qquad \frac{dz}{dt} = xy - \beta z\]
+                </p>
+
+                <p style="text-align: center; color: #666; font-size: 0.9em; margin-bottom: 35px;">
+                    With the parameters (σ = 3, ρ = 26, β = 1), these equations produce the iconic "butterfly" pattern above.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                <!-- The Story -->
+                <h3 style="margin-bottom: 20px;">The Story Behind Chaos</h3>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    In 1961, a meteorologist named Edward Lorenz was trying to predict the weather using a room-sized computer. To save time, he rounded a number from 0.506127 to 0.506. He went to get coffee, came back, and his entire simulated weather had diverged into something completely different. That tiny 0.1% difference led to a fundamentally different outcome.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    This serendipitous discovery gave birth to Chaos Theory and the famous "Butterfly Effect" — the poetic notion that a butterfly flapping its wings in Brazil could set off a tornado in Texas. These equations proved that you can have a system that is perfectly mathematical and deterministic, yet completely unpredictable.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    Look at the animation above. The trajectory never repeats itself, never crosses its own path, yet remains forever bounded within those two ethereal wings. It's an ordered mess — chaos with structure.
+                </p>
+
+                <h3 style="margin: 35px 0 20px 0;">Why Does This Matter?</h3>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    Ever wonder why the weather app says sunny in 10 days but it pours rain? That's Lorenz's legacy. Because of sensitive dependence on initial conditions, we can never predict weather perfectly beyond about two weeks — no matter how powerful our computers become.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    These chaotic dynamics appear everywhere: in the rhythm of your heartbeat, the way lasers pulse, stock market fluctuations, and even how social trends go viral. The Lorenz Attractor is a humble reminder from the universe that some things are fundamentally unknowable — and that there's beauty in the unpredictable.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                <!-- Project Details -->
+                <h3 style="margin-bottom: 20px;">Project Details</h3>
+
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Author:</span> Sajal Gupta
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Year:</span> 2020
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Tech:</span> Python, NumPy, Matplotlib, MPI, FFmpeg
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 25px;">
+                    <span style="color: #666;">Features:</span> High-resolution integration (dt = 10⁻³), cinematic 60 FPS rendering with dynamic camera paths, multi-layered "ember glow" visual effects, and MPI parallelization for efficient computation.
+                </p>
+
+                <!-- GitHub Link -->
+                <div style="margin-top: 30px;">
+                    <a href="https://github.com/sajalgupta0422/lorenz-attractor" target="_blank" style="display: inline-block; padding: 12px 28px; background: #8b7355; color: white; text-decoration: none; border-radius: 4px; font-size: 0.95em;">
+                        <i class="fab fa-github"></i> &nbsp;View Source Code
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

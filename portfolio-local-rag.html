@@ -1,0 +1,97 @@
+<div id="ajax-page" class="ajax-page-content">
+  <div class="ajax-page-wrapper">
+    <div class="ajax-page-nav">
+      <div class="nav-item ajax-page-prev-next">
+        <a class="ajax-page-load" href="#"><i class="lnr lnr-chevron-left"></i></a>
+        <a class="ajax-page-load" href="#"><i class="lnr lnr-chevron-right"></i></a>
+      </div>
+      <div class="nav-item ajax-page-close-button">
+        <a id="ajax-page-close-button" href="#"><i class="lnr lnr-cross"></i></a>
+      </div>
+    </div>
+
+    <div class="ajax-page-title">
+      <h1>Local RAG Chatbot: Cited Answers from Your PDF Library</h1>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12 col-md-12 portfolio-block">
+
+        <h3 style="margin-bottom: 20px;">Goal</h3>
+
+        <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+          I built this local RAG chatbot to genuinely understand technical topics by asking questions against a PDF library I trust, and getting answers that come with explicit citations back to the source papers. Right now it is tuned for accretion disks around black holes, especially tilted flows.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+        <h3 style="margin-bottom: 20px;">Why I built this?</h3>
+
+        <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+          This started after a frustrating experience in 2024 when I asked popular web AI tools like ChatGPT and Gemini about research papers on magnetic alignment in Pulsars when the configuration is retrograde. They both produced many citations and convincing summary of those cited papers. However, when I started them reading individually, I realized that most of the studies they cited simply did not exist. Their answers sounded convincing enough to be dangerous, and it made me question about the reliability of these tools. This is expecially alarming for researchers who rely on accurate citations for their work. In academia, arguments should be objective and evidence-based. If you make a claim, you should be able to point to where it came from and verify it. So I built a chatbot that answers strictly from a local, user-controlled dataset of PDFs and attaches citations to the ingested sources.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+        <h3 style="margin-bottom: 20px;">What the project does?</h3>
+
+        <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+          It ingests a folder of PDFs, chunks them, builds embeddings, and creates a FAISS index for fast retrieval. When you ask a question, it pulls the most relevant chunks and generates an answer with citations that point back to the ingested sources. It also includes structured “chapter style” writing modes (intro, methods, current state, future) that help turn a messy topic into something organized and readable. I used it to enhance my understading on accretion disk physics, specifically tilted disks around black holes.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+        <h3 style="margin-bottom: 20px;">Demo</h3>
+
+        <!-- GIF - constrained size -->
+         <!--
+        <div style="text-align: center; margin-bottom: 30px;">
+          <img src="img/portfolio/local_rag_chatbot/local_rag_demo.gif" alt="Local RAG Chatbot Demo" style="max-width: 720px; width: 100%; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+        </div>
+        -->
+
+        <div style="text-align: center; margin-bottom: 30px;">
+          <video controls preload="metadata" playsinline 
+                style="max-width: 720px; width: 100%; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+              <source src="img/portfolio/local_rag_chatbot/local_rag_demo_video.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+        </div>
+
+        <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+          The GIF above shows a typical flow: a question, retrieval of supporting chunks, and a response that stays grounded in what the PDF library actually contains.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+        <h3 style="margin-bottom: 20px;">Final thoughts</h3>
+
+        <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+          For focused questions, it produces reliable, well-cited outputs and can draft decent chapter-style text without inventing references. The best part for me is to create a detailed summary on topics that I read raraely during my doctorate journey, like observations related to tilted disks or summary of an AGN spectra. However, compared to open-source AI platforms, it responses are shorter due to small number of tokens (~8 k), and is considerabely slow because of CPU-only processing. Furthermore, it did not matter how much I tried giving different prompts, its responses are always substandard compared to open-source AI platforms. In the end, I had fun building this chatbot, and now I have something that I can trust.  While building it, I realized how much retrieval design and prompt structure control the quality of the result. I started appreciating the technicalties that goes into a llm model, like reducing latency, thought process and making it understand what part of a prompt is relatively important. It is definitely not an easy task to build a chatbot, even a simple one! Looking forward, I want to work on reducing latency by adding GPU layers and improving the refinement workflow so the model follows prompt priorities more consistently.
+        </p>
+
+        <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+        <h3 style="margin-bottom: 20px;">Project Details</h3>
+
+        <p style="line-height: 1.8; margin-bottom: 12px;">
+          <span style="color: #666;">Author:</span> Sajal Gupta
+        </p>
+        <p style="line-height: 1.8; margin-bottom: 12px;">
+          <span style="color: #666;">Year:</span> 2024-2026
+        </p>
+        <p style="line-height: 1.8; margin-bottom: 25px;">
+          <span style="color: #666;">Tech:</span> Python, local LLM, embeddings, FAISS, PDF ingestion, citation formatting
+        </p>
+
+        <!-- GitHub Link -->
+        <div style="margin-top: 30px;">
+          <a href="https://github.com/sajalgupta0422/local_rag_chatbot" target="_blank" style="display: inline-block; padding: 12px 28px; background: #8b7355; color: white; text-decoration: none; border-radius: 4px; font-size: 0.95em;">
+            <i class="fab fa-github"></i> &nbsp;View Source Code
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

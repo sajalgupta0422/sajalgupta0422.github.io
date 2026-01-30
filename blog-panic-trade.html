@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"> 
+    <title>From Panic Trade to Math: Choosing a 1DTE Put with Risk Aversion</title>
+    <meta name="description" content="A personal, educational notebook-driven walkthrough: Monte Carlo + Black–Scholes + certainty equivalent to choose a less-bad 1DTE put entry price under risk aversion." />
+    <meta name="keywords" content="1DTE put, options, risk aversion, certainty equivalent, Monte Carlo simulation, Black-Scholes, expected utility, QBTS, implied volatility" />
+    <meta name="author" content="Sajal Gupta" />
+    <link rel="shortcut icon" href="favicon.ico">
+
+
+    <link rel="stylesheet" href="css/reset.css" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css" type="text/css">
+    <link rel="stylesheet" href="css/animations.css" type="text/css">
+    <link rel="stylesheet" href="css/perfect-scrollbar.css" type="text/css">
+    <link rel="stylesheet" href="css/owl.carousel.css" type="text/css">
+    <link rel="stylesheet" href="css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="css/main.css" type="text/css">
+
+    <script src="js/modernizr.custom.js"></script>
+
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['\\(','\\)']],
+          displayMath: [['\\[','\\]']]
+        },
+        svg: { fontCache: 'global' }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  </head>
+
+  <body>
+    <!-- Animated Background -->
+    <div class="lm-animated-bg" style="background-image: url(img/main_bg.png);"></div>
+    <!-- /Animated Background -->
+
+    <!-- Loading animation -->
+    <div class="preloader">
+      <div class="preloader-animation">
+        <div class="preloader-spinner">
+        </div>
+      </div>
+    </div>
+    <!-- /Loading animation -->
+
+    <div class="page">
+      <div class="page-content">
+
+          <header id="site_header" class="header mobile-menu-hide">
+            <div class="header-content">
+              <div class="header-photo">
+                <img src="img/main_photo.jpg" alt="Sajal Gupta">
+              </div>
+              <div class="header-titles">
+                <h2>Sajal Gupta</h2>
+                <h4>Almost  Dr. Astrophysicist</h4>
+              </div>
+            </div>
+
+            <ul class="main-menu">
+              <li class="active">
+                <a href="index.html#about-me" class="nav-anim">
+                  <span class="menu-icon lnr lnr-home"></span>
+                  <span class="link-text">About Me</span>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#resume" class="nav-anim">
+                  <span class="menu-icon lnr lnr-graduation-hat"></span>
+                  <span class="link-text">Resume</span>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#portfolio" class="nav-anim">
+                  <span class="menu-icon lnr lnr-briefcase"></span>
+                  <span class="link-text">Portfolio</span>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#blog" class="nav-anim">
+                  <span class="menu-icon lnr lnr-book"></span>
+                  <span class="link-text">Blog</span>
+                </a>
+              </li>
+              <li>
+                <a href="index.html#contact" class="nav-anim">
+                  <span class="menu-icon lnr lnr-envelope"></span>
+                  <span class="link-text">Contact</span>
+                </a>
+              </li>
+            </ul>
+
+            <div class="social-links">
+              <ul>
+                <li><a href="https://www.linkedin.com/in/sajal-gupta-696b39110/" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a></li>
+                <li><a href="https://github.com/sajalgupta0422" target="_blank" title="GitHub"><i class="fab fa-github"></i></a></li>
+                <li><a href="https://orcid.org/my-orcid?orcid=0000-0001-5661-7104" target="_blank" title="ORCID"><i class="fab fa-orcid"></i></a></li>
+                <li><a href="https://scholar.google.com/citations?user=YBbQAXgAAAAJ&hl=en" target="_blank" title="Google Scholar"><i class="fas fa-graduation-cap"></i></a></li>
+              </ul>
+            </div>
+
+            <div class="header-buttons">
+              <a href="documents/Website_resume.pdf" target="_blank" class="btn btn-primary"> Download Resume</a>
+              <a href="documents/Website_academic_CV.pdf" target="_blank" class="btn btn-primary"> Download CV</a>
+            </div>
+          
+          </header>
+
+          <!-- Mobile Navigation -->
+          <div class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <!-- End Mobile Navigation -->
+
+          <div class="content-area single-page-area">
+            <div class="single-page-content">
+
+              <article class="post">
+
+                <div class="post-thumbnail">
+                  <img src="img/blog/panic_trade_thumb_resized.webp" alt="Options notebook: risk aversion and 1DTE puts">
+                </div>
+
+                <div class="post-content">
+                  <header class="entry-header">
+                    <div class="entry-meta entry-meta-top">
+                      <span><a href="#" rel="category tag">Quant Finance</a></span>
+                    </div>
+
+                    <h1 class="entry-title">From Panic Trade to Math: Choosing a 1DTE Put with Risk Aversion</h1>
+                  </header>
+
+                  <div class="entry-content">
+                    <div class="row">
+                      <div class="col-xs-12 col-sm-12">
+                        <div class="col-inner">
+
+                          <p>
+                            September 2025 was one of those weeks where everything in quantum stocks seemed to go up just because it could. D-Wave Quantum Inc (sticker: QBTS) had been ripping for days, 
+                            gaining \(\sim 40\% \) in just first two weeks of September. It's implied volatility on 17th of the month was through the roof \(\sim 174 \% \) implying huge expected moves.
+                            So, like many other traders (or degenerates as redditors like to call us), I did what a lot of them do when a chart feels overextended: 
+                            I decided to buy a 1DTE put on Thursday (Sep 18), convinced a pullback was imminent.
+                          </p>
+
+                          <p>
+                            This post is the story of how that impulse turned into a small notebook experiment. To rewind a bit: I was taking a class called
+                            <i>Computer Science: Optimization and Learning</i>—right at the part where you learn about utility, risk aversion, and how maximizing expected profit
+                            isn’t the same thing as making a good decision under uncertainty. 
+                          </p>  
+                            
+                          <p>
+                            So I asked myself a question that felt both honest and salvageable at that time:
+                            <b>If I’m going to take a dumb short-term options bet, can I at least choose a less-dumb entry price—using risk-aversion theory instead of vibes?</b>
+                            The expiration for the nearest put options was in two days, so I thought: 
+                            <b>If I buy a fresh 1DTE put tomorrow (Thursday) and hold it to Friday expiry, what does the full distribution of outcomes look like?</b> 
+                          </p>  
+                            
+                          <p>
+                            The reason I asked this
+                            question was because the option prices for out-of-money \(10-15 \% \) put strikes were dirt cheap making me wonnder if the market was mispricing the potential drop, 
+                            or if I was simply falling for the 'cheap' premium trap of an efficiently priced, high-theta graveyard.
+                          </p>
+
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                          <p>Here, the trade I cared about was:</p>
+                                    <ul>
+                                        <li>
+                                            <strong>Wed &rarr; Thu:</strong> Simulate tomorrow’s spot price \( S_{\text{Thu}} \).
+                                        </li>
+                                        <li>
+                                            <strong>Thu entry:</strong> Buy a fresh 1DTE put at a model premium \( P_{\text{Thu}}(S_{\text{Thu}}, \tau = 1\,\text{day}) \).
+                                        </li>
+                                        <li>
+                                            <strong>Thu &rarr; Fri:</strong> Simulate expiry spot \( S_{\text{Fri}} \).
+                                        </li>
+                                        <li>
+                                            <strong>Fri payoff:</strong> \( \max(K - S_{\text{Fri}}, 0) \).
+                                        </li>
+                                        <li>
+                                            <strong>P/L:</strong> \( 100 \cdot (\text{payoff} - P_{\text{Thu}}) \).
+                                        </li>
+                                    </ul>
+
+                            <p>That’s the buy tomorrow, hold to Friday reality. Before I go further, I would like to add a screaming disclaimer:</p>                    
+
+                          <blockquote class="quote">
+                            This is an educational post and a personal experiment, not financial advice. Please do your own research and consult a financial advisor before making any (stupid)investment decisions.
+                            <footer class="quote-author"><span></span></footer>
+                          </blockquote>
+                          <div style="margin: 18px 0 22px;">
+                            <a href="https://github.com/sajalgupta0422/Panic-Trade" target="_blank" rel="noopener"
+                              style="display: inline-block; padding: 12px 22px; background: #8b7355; color: #fff; text-decoration: none; border-radius: 6px; font-size: 0.95em;">
+                              <i class="fab fa-github"></i> &nbsp;View notebook on GitHub
+                            </a>
+                          </div>
+
+
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                          <h3>Step 1: Simulate Thursday's spot price (because tomorrow matters)</h3>
+
+                          <p>
+                            Over a single day, drift is basically irrelevant compared to volatility—especially in a high-IV situation. 
+                            So I modeled spot moves with a one-step lognormal process (a vanilla GBM step), anchored at:
+                            <ul>
+                                <li>
+                                    <strong>Current spot:</strong> \( S_0 \approx 22.25 \)
+                                </li>
+                                <li>
+                                    <strong>Implied vol (IV):</strong> \( \sigma \approx 173.9\% \) annualized
+                                </li>
+                                <li>
+                                    <strong>Horizon:</strong> 1 trading day (and then another day to expiry)
+                                </li>
+                            </ul>
+                             This small setup was enough to simulated thousands of plausible Thursday prices \( (S_{\text{Thu}} )\) and then plausible Friday prices \( (S_{\text{Fri}} )\).
+                             I realized soon enought that with that high of IV, tomorrow isn’t a tiny wiggle but whole cloud of probability distribution.
+                          </p>
+                          
+                          <!-- FIGURE 1 -->
+                          <div style="text-align: center; margin: 18px 0 10px;">
+                            <img src="img/blog/option_valuation_comparison.webp"
+                                alt="Put price vs underlying (1DTE)"
+                                style="max-width: 860px; width: 100%; border-radius: 8px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);" />
+                            <p style="margin: 8px auto 0; max-width: 860px; color: #666; font-size: 0.95em; line-height: 1.45;">
+                              Figure 1 <strong>is intentionally not a profit chart</strong>. It’s an entry chart: if I wait until Thursday, what is a reasonable range of premiums I might pay for a 1DTE put?
+                              Here, left panel shows the Black–Scholes 1DTE price curve vs spot (a clean baseline) and the right panel shows Monte Carlo scatter of simulated \( (S_{\text{Thu}}, P_{\text{Thu}}) \) pairs.
+                            </p>
+                          </div>
+
+                          <p>
+                            Figure 1 shows the a cloud of possible \( (S_{\text{Thu}}, P_{\text{Thu}}) \) pairs. The big takeaway is the slope: near the current price, 
+                            the curve is steep. Small spot changes can move the premium a lot. I expected that as near-term options are sensitive to spot, but seeing it visually made 
+                            the trade-off clear. It also made the entry price feel like a non-trivial decision.
+                          </p>    
+
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                          <h3>Step 2: Convert stock paths into option outcomes</h3>
+
+                          <p>
+                            A put is not a pure directional bet. It’s direction + convexity + (very important for 1DTE) time value.
+                            So for each simulated Thursday spot \(S_{\text{Thu}}\), I computed the Thursday entry premium for a fresh 1DTE put using Black–Scholes:
+                          </p>
+
+                          <p>
+                            So for each simulated Thursday spot \( S_{\text{Thu}} \), I computed the Thursday entry premium for a fresh 1DTE put using Black–Scholes:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                              \[ P_{\text{Thu}} = \text{BS}_{\text{put}}(S_{\text{Thu}}, K, \tau = 1\,\text{day}, \sigma) \]
+                          </p>
+
+                          <p>
+                            Then I simulated Friday’s spot and computed the expiry payoff:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                              \[ \text{payoff}_{\text{Fri}} = \max(K - S_{\text{Fri}}, 0) \]
+                          </p>
+
+                          <p>
+                            Finally, profit per contract:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                              \[ \Pi = 100 \cdot (\text{payoff}_{\text{Fri}} - P_{\text{Thu}}) \]
+                          </p>
+
+                          <p>
+                            Now we have a full distribution of possible profits per contract \((\Pi)\) depending on what price \(P_{\text{Thu}}\) we pay tomorrow. 
+                            I computed entry thresholds based on quantiles, for instance, if you want a 70% probability of profit, you need \(p\) below roughly the 30th percentile
+                            of the simulated profit distribution. It’s basically VaR thinking in plain clothes, choose a price so that bad outcomes are sufficiently unlikely.
+                          </p>
+
+                          <!-- FIGURE 2 -->
+                          <div style="text-align: center; margin: 18px 0 10px;">
+                            <img src="img/blog/profit_distribution_blog.webp"
+                                alt="Distribution of simulated net profit per contract"
+                                style="max-width: 860px; width: 100%; border-radius: 8px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);" />
+                            <p style="margin: 8px auto 0; max-width: 860px; color: #666; font-size: 0.95em; line-height: 1.45;">
+                              Figure 2 plots the histogram of profit per contract around the current spot.
+                            </p>
+                          </div>
+
+                          <p>
+                            Figure 2 shows the histogram of profit per contract around the current spot. The distribution is heavily skewed: the mean net profit comes out negative (around \(-\$ 1\)/contract), 
+                            while the median net profit is \(\approx - \$ 5\)/contract with profit's probability is \(\approx 13 \%\). This is the lottery shape of short-dated options: 
+                            the mean is pulled around by rare tail events, while the median describes what we feel most of the time. 
+                          </p>
+
+                          <p>
+                           This asymmetrical distribution was the first signal that the trade might not be as good as I hoped before. 
+                           What surprised me was that how bad it actually looked when I modeled it. Of course, market prices are the ultimate arbiter, 
+                           but seeing the full distribution made me question all my vibe trades I did in the past. 
+                          </p>
+
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                          <h3>Step 3: Map the trade’s profile across different starting prices</h3>
+
+                          <p>
+                            Because the option premium was dirt cheap, I was still reluctant to not trade at all. I thought what if I buy at different entry price,
+                            i.e. <b> How does this strategy behave if the starting spot is different?</b>
+                          </p>
+
+                          <p>
+                            So I repeated the same two-day simulation across a grid of possible starting prices \(S\). For each \(S\), I 
+                            recomputed:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.1em; line-height: 2.0; margin: 20px 0;" class="mathjax-equation">
+                              \( \bullet \) EV (mean) of profit <br>
+                              \( \bullet \) Median profit <br>
+                              \( \bullet \) Probability of profit
+                          </p>
+                          
+                          <!-- FIGURE 3 -->
+                          <div style="text-align: center; margin: 18px 0 10px;">
+                            <img src="img/blog/strategy_profile_vs_spot.webp"
+                                alt="Certainty equivalent vs entry price for different risk aversion levels"
+                                style="max-width: 860px; width: 100%; border-radius: 8px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);" />
+                            <p style="margin: 8px auto 0; max-width: 860px; color: #666; font-size: 0.95em; line-height: 1.45;">
+                              Figure 3: <strong>The 1DTE Profitability Gap.</strong> A comparison of Expected Value (EV), Median P/L, and Win Probability across a range of spot prices. 
+                              Note how the typical Outcome (Median) sits consistently below the expected value (EV), illustrating why 1DTE puts often expire worthless even when the 
+                              directional thesis feels correct.
+                            </p>
+                          </div>
+
+                          <p>
+                            Figure 3 reveals the stark asymmetry of outcomes that defines 1DTE options. While the <strong>Expected Value (EV)</strong> might suggest an (almost) break-even, the <strong>Median P/L</strong> (the green dashed line) tells the 
+                            reality: the typical outcome for this trade is a net loss. This discrepancy is driven by the distribution's heavy right tail—rare, explosive gains that pull the EV up but occur too infrequently to benefit the average trader.
+                          </p>
+
+                          <p>
+                            Furthermore, the <strong>Probability of Profit</strong> (dotted line) remains stubbornly low at current price levels, confirming that even if trade goes my way, the rapid decay of the \( \$ 0.08 \) premium creates a high hurdle that 
+                            the underlying stock must clear just to reach break-even. In short, this is not a high-probability win, but a lottery ticket bet where the cost of being wrong is certain, and the cost of being right is expensive.
+                          </p>
+
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                          <h3>Step 4: Turn breakeven into something visual (because entry premium is random)</h3>
+
+                          <p>
+                              Most people treat breakeven as a single number, and it generally is if you are already in the trade. But here, I was not. I was planning to buy tomorrow, 
+                              and because tomorrow’s premium was uncertain, the breakeven itself becomes a distribution.
+                          </p>
+
+                          <p>
+                            For any given path, you profit if:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                              \[ \max(K - S_{\text{Fri}}, 0) > P_{\text{Thu}} \]
+                          </p>
+
+                          <p>
+                            That is equivalent to:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                              \[ S_{\text{Fri}} < K - P_{\text{Thu}} \]
+                          </p>
+
+                          <p>
+                             Define the breakeven barrier:
+                          </p>
+
+                          <p style="text-align: center; font-size: 1.15em; line-height: 2.8; margin: 25px 0;" class="mathjax-equation">
+                              \[ B = K - P_{\text{Thu}} \]
+                          </p>
+
+                          <p>
+                             Because \( P_{\text{Thu}} \) is random, \( B \) is random too.
+                          </p>
+
+                          <!-- FIGURE 4 -->
+                          <div style="text-align: center; margin: 18px 0 10px;">
+                            <img src="img/blog/breakeven_barrier.webp"
+                                alt="Certainty equivalent vs entry price for different risk aversion levels"
+                                style="max-width: 860px; width: 100%; border-radius: 8px; box-shadow: 0 6px 22px rgba(0,0,0,0.18);" />
+                            <p style="margin: 8px auto 0; max-width: 860px; color: #666; font-size: 0.95em; line-height: 1.45;">
+                              <strong>Figure 4: The Dynamic Breakeven Barrier.</strong> The left panel illustrates the distribution of the breakeven barrier \( B \), 
+                              showing how much the stock must drop just to cover your entry cost. The right panel tracks the Distance to Breakeven (\( D \)), 
+                              where only the area to the left of zero represents a profitable trade.
+                            </p>
+                          </div>
+
+                          <p>
+                            Figure 4 reframes the trade from a static bet into a dynamic race against a <strong>moving hurdle</strong>. The left panel shows that the 
+                            Breakeven Barrier isn't a single price point, but a range of possibilities you must clear to offset the cost of the contract.
+                          </p>
+
+                          <p>
+                            The right panel shows the Distance to Breakeven, which is the ultimate reality check. Profit only occurs when this distance is negative (\( D < 0 \)). 
+                            This visualization explains why 1DTE puts often feel like a trap: it isn't enough for the stock to "just" move in my direction. 
+                            I was fighting against a hurdle that is itself determined by the market's expectations, leaving me with a narrow window for success that requires 
+                            the stock to move <strong>further and faster</strong> than the premium I would've paid initially implies.
+                          </p>
+
+
+                          <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                          <h3>What I learned</h3>
+                            <p>
+                              A 1DTE put is an entry-price problem disguised as a prediction problem. 
+                              The <strong>Probability of Profit</strong> is usually low for far OTM 1DTE puts unless the premium is extremely cheap or the underlying is truly explosive.
+                            </p>
+
+                            <p>
+                              Median beats mean for emotional realism. The median tells you what you will actually experience most of the time, not some theoretical average driven by a few lucky outliers.
+                            </p>
+
+                            <p>
+                              Breakeven is path-dependent when you enter tomorrow. Because the premium you pay is uncertain, the hurdle you must clear is uncertain too.
+                            </p>
+
+                            <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                            <h3>Closing thought</h3>
+                            <p>
+                              If you have ever panic-clicked a 1DTE option because the chart felt wrong, here is the question I wish I asked sooner:
+                            </p>
+
+                            <p style="text-align: center; font-size: 1.15em; line-height: 1.8; margin: 25px 0; color: #8b7355;">
+                                <strong>What distribution am I paying for and does that distribution match my risk tolerance?</strong>
+                            </p>
+
+                            <p>
+                              If not, the best trade might be the simplest one: do not buy a lottery ticket when what you really want is a savings bond.
+                            </p>
+
+                            <p>
+                              Adios, keep trading, and keep making dumb decisions!
+                            </p>
+                      
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="entry-meta entry-meta-bottom">
+                    <div class="date-author">
+                      <span class="entry-date">
+                        <a href="#" rel="bookmark">
+                          <i class="far fa-clock"></i> <span class="entry-date"> September 2025</span>
+                        </a>
+                      </span>
+                      <span class="author vcard">
+                        <a class="url fn n" href="#" rel="author"> <i class="fas fa-user"></i> Sajal Gupta</a>
+                      </span>
+                    </div>
+
+                    <div class="entry-share btn-group share-buttons">
+                      <a id="share-facebook" href="#" class="btn" target="_blank" rel="noopener" title="Share on Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                      </a>
+                      <a id="share-twitter" href="#" class="btn" target="_blank" rel="noopener" title="Share on X (Twitter)">
+                        <i class="fab fa-twitter"></i>
+                      </a>
+                      <a id="share-linkedin" href="#" class="btn" target="_blank" rel="noopener" title="Share on LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                      </a>
+                    </div>
+
+                    <script>
+                        (function () {
+                          const url = encodeURIComponent(window.location.href);
+                          const title = encodeURIComponent(document.title);
+
+                          const fb = document.getElementById('share-facebook');
+                          const tw = document.getElementById('share-twitter');
+                          const li = document.getElementById('share-linkedin');
+
+                          if (fb) fb.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
+                          if (tw) tw.href = 'https://twitter.com/intent/tweet?text=' + title + '&url=' + url;
+                          if (li) li.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
+                        })();
+                    </script>
+
+
+                  <div class="post-tags">
+                    <div class="tags">
+                      <a href="#" rel="tag">options</a>
+                      <a href="#" rel="tag">1DTE</a>
+                      <a href="#" rel="tag">risk aversion</a>
+                      <a href="#" rel="tag">certainty equivalent</a>
+                      <a href="#" rel="tag">monte carlo</a>
+                      <a href="#" rel="tag">black scholes</a>
+                      <a href="#" rel="tag">QBTS</a>
+                    </div>
+                  </div>
+
+                </div>
+              </article>
+
+
+            </div>
+          </div>
+
+      </div>
+    </div>
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/modernizr.custom.js"></script>
+    <script src="js/animating.js"></script>
+
+    <script src="js/imagesloaded.pkgd.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+
+    <script src='js/perfect-scrollbar.min.js'></script>
+    <script src='js/jquery.shuffle.min.js'></script>
+    <script src='js/masonry.pkgd.min.js'></script>
+    <script src='js/owl.carousel.min.js'></script>
+    <script src="js/jquery.magnific-popup.min.js"></script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrDf32aQTCVENBhFJbMBKOUTiUAABtC2o"></script>
+    <script src="js/jquery.googlemap.js"></script>
+    <script src="js/validator.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

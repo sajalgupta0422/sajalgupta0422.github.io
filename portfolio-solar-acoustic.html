@@ -1,0 +1,138 @@
+<div id="ajax-page" class="ajax-page-content">
+    <div class="ajax-page-wrapper">
+        <div class="ajax-page-nav">
+            <div class="nav-item ajax-page-prev-next">
+                <a class="ajax-page-load" href="#"><i class="lnr lnr-chevron-left"></i></a>
+                <a class="ajax-page-load" href="#"><i class="lnr lnr-chevron-right"></i></a>
+            </div>
+            <div class="nav-item ajax-page-close-button">
+                <a id="ajax-page-close-button" href="#"><i class="lnr lnr-cross"></i></a>
+            </div>
+        </div>
+
+        <div class="ajax-page-title">
+            <h1>Solar Acoustic Modes: Seeing Order in “Noise”</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 col-md-12 portfolio-block">
+
+                <!-- GIF - constrained size (same style philosophy as Lorenz) -->
+                <!--
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <img src="img/portfolio/solar/solar_spectrum_optimized.gif"
+                         alt="Solar acoustic modes power spectrum animation"
+                         style="max-width: 760px; width: 100%; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
+                </div>
+                -->
+                
+                <div style="text-align: center; margin-bottom: 30px;">
+                <video autoplay loop muted playsinline 
+                    style="max-width: 760px; width: 100%; border-radius: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                    <source src="img/portfolio/solar/solar_spectrum.webm" type="video/webm">
+                </video>
+            </div>
+                <!-- Lead-in -->
+                <p style="text-align: center; margin: 30px 0; line-height: 2.2;">
+                    This visualization is a small, personal example of why spectral analysis is powerful:
+                    the raw signal looks messy, but in the right representation, the hidden structure becomes undeniable.
+                </p>
+
+                <!-- The Equations -->
+                <h3 style="margin-bottom: 20px;">What I Computed</h3>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    Starting from a Doppler-velocity data cube \(v(x,y,t)\), I computed a 3D Fourier transform across both spatial
+                    dimensions and time, and then formed a power spectrum:
+                </p>
+
+                <p style="text-align: center; font-size: 1.10em; line-height: 2.6; margin: 25px 0;" class="mathjax-equation">
+                    \[
+                    V(k_x,k_y,\omega)=\mathcal{F}\{v(x,y,t)\},
+                    \qquad
+                    P(k_x,k_y,\omega)=|V(k_x,k_y,\omega)|^2
+                    \]
+                </p>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    The animation shows slices through this spectral cube. As \(\omega\) changes, rings and ridges emerge in \((k_x,k_y)\)-space.
+                    Those are the Sun’s acoustic resonances: coherent standing-wave power hiding inside data that otherwise feels like shimmering noise.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                <!-- The Story -->
+                <h3 style="margin-bottom: 20px;">The Story: How Features “Appear”</h3>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    If you only look at the Doppler maps in real space, everything seems complicated—granulation, evolving patterns,
+                    and fluctuations everywhere. But when you transform into frequency and wavenumber space, the physics becomes legible.
+                    Suddenly, the Sun looks less like chaos and more like an instrument: many modes superposed at once, each leaving a
+                    geometric fingerprint in the spectrum.
+                </p>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    In the left panel, the 1D spectrum \(P(\omega)\) highlights dominant frequencies; in the right panel, the 2D spatial spectrum
+                    shows how power organizes by spatial scale. Watching the animation feels like turning a dial until the “right” notes come into focus.
+                    That moment—when the rings become obvious—is exactly the feeling that made me love applied math.
+                </p>
+
+                <h3 style="margin: 35px 0 20px 0;">Two Practical Signal-Processing Lessons</h3>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    <strong>(1) Windowing reduces spectral leakage.</strong> Sharp edges in the spatial domain inject artificial high-frequency power.
+                    Applying a smooth, radially symmetric window suppresses those boundary artifacts so the true modal structure stands out.
+                </p>
+
+                <p style="text-align: center; font-size: 1.05em; line-height: 2.6; margin: 20px 0;" class="mathjax-equation">
+                    \[
+                    w(r)=
+                    \begin{cases}
+                    1-(r/R)^2, & r&lt;R\\
+                    0, & r\ge R
+                    \end{cases}
+                    \qquad (r^2=x^2+y^2)
+                    \]
+                </p>
+
+                <p style="text-align: justify; line-height: 1.8; margin-bottom: 18px;">
+                    <strong>(2) Aggregation boosts signal-to-noise.</strong> By averaging/bucketing power in a way that respects symmetry (e.g., annuli in
+                    \((k_x,k_y)\)-space), weak but coherent features become robust. In industry terms: you reduce variance by summarizing along the right invariances.
+                </p>
+
+                <hr style="border: none; border-top: 1px solid #eee; margin: 35px 0;">
+
+                <!-- Project Details -->
+                <h3 style="margin-bottom: 20px;">Project Details</h3>
+
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Author:</span> Sajal Gupta
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Year:</span> 2020
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Context:</span> Math Methods homework (Problem 2)
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 12px;">
+                    <span style="color: #666;">Tech:</span> Python, NumPy/SciPy/AstroPy/Bash, FFTs, Matplotlib
+                </p>
+                <p style="line-height: 1.8; margin-bottom: 25px;">
+                    <span style="color: #666;">What it demonstrates:</span> 3D spectral estimation \(P(k_x,k_y,\omega)\), leakage control via windowing,
+                    and feature discovery by transforming a noisy-looking signal into a representation where structure is visible.
+                </p>
+
+                <!-- GitHub Link -->
+                <div style="margin-top: 30px;">
+                    <a href="https://github.com/sajalgupta0422/solar-acoustic-modes"
+                       target="_blank"
+                       style="display: inline-block; padding: 12px 28px; background: #8b7355; color: white; text-decoration: none; border-radius: 4px; font-size: 0.95em;">
+                        <i class="fab fa-github"></i> &nbsp;View Source Code
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End of portfolio-solar-acoustic.html -->
